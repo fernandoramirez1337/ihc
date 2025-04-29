@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    guid: 29ca20dc263064652b482d0b8bdc1631
   - enabled: 0
     path: Assets/Scenes/ControllerAndHands.unity
     guid: 459ff5ad424994f0ba3ac33dca53fedf
@@ -35,9 +35,66 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/VR_Paint_1.1.unity
     guid: fbe104a7b3ffe4bf092888bdb2cf4993
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/3D_Paint.unity
     guid: f5e111dc6b0234ab8b03bcc87190cd4e
+  - enabled: 0
+    path: Assets/Scenes/3D_Paint_Motion.unity
+    guid: 6e4f2b78367f2424eaa081b2b50baa16
+  - enabled: 0
+    path: Assets/Scenes/3D_Paint_v2.0.unity
+    guid: 5f6ba1284be2540c384590bbc97f043e
+  - enabled: 0
+    path: Assets/Scenes/fabios.unity
+    guid: 6fbfb5dee36b3480bb801fe695f38ca6
+  - enabled: 0
+    path: Assets/Scenes/13apr.unity
+    guid: e53224af3afe74665a3253688f1a79d5
+  - enabled: 0
+    path: Assets/Scenes/15apr.unity
+    guid: 589d23067b38b431abadaeee3c26a8eb
+  - enabled: 0
+    path: Assets/Scenes/15apr2.0.unity
+    guid: 1adc504c58057407db2a4fbc10458bb8
+  - enabled: 0
+    path: Assets/Samples/XR Interaction Toolkit/3.1.2/Starter Assets/DemoScene.unity
+    guid: 319dafa5c80f29f428dc1e0d03f04177
+  - enabled: 0
+    path: Assets/Scenes/Practice.unity
+    guid: 0311200d6467248a9beba5d937bfe128
+  - enabled: 0
+    path: Assets/Scenes/MyHandGesture.unity
+    guid: ebb3be015e5734504a8bdb8189dc2834
+  - enabled: 0
+    path: Assets/Scenes/GestureScene.unity
+    guid: fe4394f92be1b453f910f103c97fd369
+  - enabled: 0
+    path: Assets/Scenes/GestureScene2.0.unity
+    guid: 715d34bbdf36243fa86a6431a7cf5f89
+  - enabled: 0
+    path: Assets/Scenes/myGestures.unity
+    guid: 7823011eea82d4520840a715b3aeca6c
+  - enabled: 0
+    path: Assets/Scenes/GestureScene3.0.unity
+    guid: 8c2cac13115e04c508867c3a8e7283cd
+  - enabled: 0
+    path: Assets/Scenes/RadialMenu.unity
+    guid: ea5cbfe30eedd44b096c1561cf834602
+  - enabled: 0
+    path: Assets/Samples/Meta XR Interaction SDK Essentials/74.0.0/UnityXR Integration/Scenes/UnityXRComprehensiveRigExample.unity
+    guid: 1c3839a1070e4a14ab46e590c49bec68
+  - enabled: 0
+    path: Assets/Scenes/25apr.unity
+    guid: 5dad9a477a720427b963c144d8645964
+  - enabled: 0
+    path: Assets/Samples/XR Hands/1.5.1/Gestures/HandGestures.unity
+    guid: cd792f2302b8b6f4c9f264e2a4503e15
+  - enabled: 0
+    path: Assets/Scenes/Integration1.0.unity
+    guid: bf52d339f2f6545cfa1c3df77c5bc8ed
+  - enabled: 1
+    path: Assets/Scenes/26apr.unity
+    guid: a6b61595e83564b85adfefb6b9c1488b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: dfdffe273d7a641b9b9e11a4f741f236, type: 2}

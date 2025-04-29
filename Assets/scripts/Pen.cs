@@ -1,17 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Oculus.Interaction; // Grabbable
+using Oculus.Interaction; // Para Grabbable
 using Oculus.Interaction.Throw;
 
 public class Pen : MonoBehaviour
 {
     [Header("Pen Properties")]
+    [Tooltip("Transform que marca la punta del pen.")]
     public Transform tip;
+
+    [Tooltip("Material base para los trazos. Cada trazo clonará este material para preservar su color.")]
     public Material drawingMaterial;
-    public Material tipMaterial;
-    [Range(0.01f, 0.1f)]
+
+    [Range(0.01f, 0.1f), Tooltip("Ancho del trazo.")]
     public float penWidth = 0.01f;
-    public Color[] penColors;
 
     [Header("Grabbable")]
     public Grabbable grabbable;
@@ -20,65 +22,51 @@ public class Pen : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip paintSound;
 
+    [Header("Undo")]
+    [Tooltip("Botón OVR para deshacer el último trazo.")]
+    public OVRInput.Button undoButton = OVRInput.Button.Two;
+
     private LineRenderer currentDrawing;
     private int index;
-    private int currentColorIndex;
-
     private bool _drawButtonPressed = false;
-
-    private void Start()
-    {
-        currentColorIndex = 0;
-        tipMaterial.color = penColors[currentColorIndex];
-    }
+    private readonly List<LineRenderer> _strokes = new List<LineRenderer>();
 
     private void Update()
     {
-        bool isGrabbed = grabbable.GrabPoints.Count > 0;
+        // Detectar deshacer
+        if (OVRInput.GetDown(undoButton))
+        {
+            UndoLastStroke();
+        }
 
+        // Detección de dibujo
+        bool isGrabbed = grabbable.GrabPoints.Count > 0;
         Vector2 primaryAxis = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
         Vector2 secondaryAxis = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
-
         bool drawButtonDown = isGrabbed && (primaryAxis.y < -0.7f || secondaryAxis.y < -0.7f);
 
         if (drawButtonDown)
         {
             Draw();
-
             if (!_drawButtonPressed)
             {
                 _drawButtonPressed = true;
                 if (audioSource != null && paintSound != null)
                 {
-                    if (audioSource.clip != paintSound)
-                    {
-                        audioSource.clip = paintSound;
-                    }
+                    audioSource.clip = paintSound;
                     audioSource.loop = true;
                     audioSource.Play();
                 }
             }
         }
-        else
+        else if (_drawButtonPressed)
         {
-            if (_drawButtonPressed)
+            _drawButtonPressed = false;
+            if (audioSource != null && audioSource.isPlaying)
             {
-                _drawButtonPressed = false;
-                if (audioSource != null && audioSource.isPlaying)
-                {
-                    audioSource.Stop();
-                }
+                audioSource.Stop();
             }
-            
-            if (currentDrawing != null)
-            {
-                currentDrawing = null;
-            }
-        }
-
-        if (OVRInput.GetDown(OVRInput.Button.One))
-        {
-            SwitchColor();
+            currentDrawing = null;
         }
     }
 
@@ -86,29 +74,49 @@ public class Pen : MonoBehaviour
     {
         if (currentDrawing == null)
         {
-            index = 0;
-            currentDrawing = new GameObject("Line").AddComponent<LineRenderer>();
-            currentDrawing.material = drawingMaterial;
-            currentDrawing.startColor = currentDrawing.endColor = penColors[currentColorIndex];
-            currentDrawing.startWidth = currentDrawing.endWidth = penWidth;
-            currentDrawing.positionCount = 1;
-            currentDrawing.SetPosition(0, tip.position);
+            BeginStroke();
         }
         else
         {
-            Vector3 currentPos = currentDrawing.GetPosition(index);
-            if (Vector3.Distance(currentPos, tip.position) > 0.01f)
-            {
-                index++;
-                currentDrawing.positionCount = index + 1;
-                currentDrawing.SetPosition(index, tip.position);
-            }
+            ContinueStroke();
         }
     }
 
-    private void SwitchColor()
+    private void BeginStroke()
     {
-        currentColorIndex = (currentColorIndex + 1) % penColors.Length;
-        tipMaterial.color = penColors[currentColorIndex];
+        index = 0;
+        GameObject go = new GameObject("Line");
+        LineRenderer lr = go.AddComponent<LineRenderer>();
+        // Clonar material para que cada trazo conserve su color
+        lr.material = new Material(drawingMaterial);
+        lr.startWidth = lr.endWidth = penWidth;
+        lr.positionCount = 1;
+        lr.SetPosition(0, tip.position);
+
+        currentDrawing = lr;
+        _strokes.Add(lr);
+    }
+
+    private void ContinueStroke()
+    {
+        Vector3 currentPos = currentDrawing.GetPosition(index);
+        if (Vector3.Distance(currentPos, tip.position) > 0.01f)
+        {
+            index++;
+            currentDrawing.positionCount = index + 1;
+            currentDrawing.SetPosition(index, tip.position);
+        }
+    }
+
+    private void UndoLastStroke()
+    {
+        if (_strokes.Count == 0) return;
+        int lastIndex = _strokes.Count - 1;
+        LineRenderer last = _strokes[lastIndex];
+        _strokes.RemoveAt(lastIndex);
+        if (last != null)
+        {
+            Destroy(last.gameObject);
+        }
     }
 }
